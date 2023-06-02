@@ -1,5 +1,3 @@
-using WappuApi.Core.Track;
-
 namespace WappuApi.Core.Program;
 
 public class ProgramEntity : EntityBase

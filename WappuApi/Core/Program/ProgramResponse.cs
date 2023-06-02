@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace WappuApi.Core.Program;
 
-public record ProgramResponse
+public record ProgramResponse : ProgramRequest
 {
     public ProgramResponse() { }
 
@@ -15,7 +15,4 @@ public record ProgramResponse
     };
 
     public int Id { get; init; }
-    public string Title { get; init; } = null!;
-    public DateTime StartAt { get; init; }
-    public DateTime EndAt { get; init; }
 }

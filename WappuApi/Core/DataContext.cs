@@ -8,7 +8,7 @@ public class DataContext : DbContext
 {
     public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         OnBeforeSaving();
         return base.SaveChangesAsync(cancellationToken);
@@ -44,6 +44,6 @@ public class DataContext : DbContext
     }
 
     public DbSet<ProgramEntity> Programs { get; protected set; } = null!;
-    
+
     public DbSet<TrackEntity> Tracks { get; protected set; } = null!;
 }

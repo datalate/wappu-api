@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace WappuApi.Core.Track;
 
-public record TrackResponse
+public record TrackResponse : TrackRequest
 {
     public TrackResponse() { }
 
@@ -15,7 +15,4 @@ public record TrackResponse
     };
 
     public int Id { get; init; }
-    public string? Artist { get; init; }
-    public string Title { get; init; } = null!;
-    public DateTime PlayedAt { get; init; }
 }
