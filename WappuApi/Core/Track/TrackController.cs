@@ -5,18 +5,12 @@ namespace WappuApi.Core.Track;
 
 [ApiController]
 [Route("tracks")]
-public class TrackController : ControllerBase
+public class TrackController(
+    ILogger<TrackController> logger,
+    DataContext context) : ControllerBase
 {
-    private readonly ILogger<TrackController> _logger;
-    private readonly DataContext _context;
-
-    public TrackController(
-        ILogger<TrackController> logger,
-        DataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly ILogger<TrackController> _logger = logger;
+    private readonly DataContext _context = context;
 
     [HttpGet()]
     public ActionResult<IEnumerable<TrackResponse>> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)

@@ -5,18 +5,12 @@ namespace WappuApi.Core.Program;
 
 [ApiController]
 [Route("programs")]
-public class ProgramController : ControllerBase
+public class ProgramController(
+    ILogger<ProgramController> logger,
+    DataContext context) : ControllerBase
 {
-    private readonly ILogger<ProgramController> _logger;
-    private readonly DataContext _context;
-
-    public ProgramController(
-        ILogger<ProgramController> logger,
-        DataContext context)
-    {
-        _logger = logger;
-        _context = context;
-    }
+    private readonly ILogger<ProgramController> _logger = logger;
+    private readonly DataContext _context = context;
 
     [HttpGet()]
     public ActionResult<IEnumerable<ProgramResponse>> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
