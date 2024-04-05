@@ -5,29 +5,23 @@ namespace WappuApi.Core.Program;
 
 [ApiController]
 [Route("programs")]
-public class ProgramController : ControllerBase
+public class ProgramController(
+    ILogger<ProgramController> logger,
+    DataContext context) : ControllerBase
 {
-    private readonly ILogger<ProgramController> _logger;
-    private readonly DataContext _context;
+    private readonly ILogger<ProgramController> _logger = logger;
+    private readonly DataContext _context = context;
 
-    public ProgramController(
-        ILogger<ProgramController> logger,
-        DataContext context)
+    [HttpGet("")]
+    public async Task<ActionResult<IEnumerable<ProgramResponse>>> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
     {
-        _logger = logger;
-        _context = context;
-    }
-
-    [HttpGet()]
-    public ActionResult<IEnumerable<ProgramResponse>> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
-    {
-        var programs = _context.Programs
+        var programs = await _context.Programs
             .AsNoTracking()
-            .Where(program => startDate.HasValue ? (program.StartAt > startDate) : true)
-            .Where(program => endDate.HasValue ? (program.EndAt < endDate) : true)
-            .Select(ProgramResponse.Projection);
+            .Where(program => !startDate.HasValue || (program.StartAt > startDate))
+            .Where(program => !endDate.HasValue || (program.EndAt < endDate))
+            .ToListAsync();
 
-        return Ok(programs);
+        return Ok(programs.Select(ProgramResponse.Projection.Compile()));
     }
 
     [HttpGet("{id}")]
@@ -43,7 +37,7 @@ public class ProgramController : ControllerBase
         return Ok(ProgramResponse.Projection.Compile().Invoke(program));
     }
 
-    [HttpPost]
+    [HttpPost("")]
     public async Task<ActionResult<ProgramResponse>> Post([FromBody] ProgramRequest request)
     {
         var program = _context.Programs.Add(new ProgramEntity()).Entity;
@@ -76,21 +70,19 @@ public class ProgramController : ControllerBase
         var program = await _context.Programs
             .SingleOrDefaultAsync(program => program.Id == id);
 
-        if (program == default)
-            return NotFound();
-
-        _context.Remove(program);
-
-        await _context.SaveChangesAsync();
+        if (program != default) {
+            _context.Remove(program);
+            await _context.SaveChangesAsync();
+        }
 
         return Ok();
     }
 
-    private ProgramEntity MapFields(ProgramEntity program, ProgramRequest request)
+    private static ProgramEntity MapFields(ProgramEntity program, ProgramRequest request)
     {
         program.Title = request.Title;
-        program.StartAt = request.StartAt!.Value;
-        program.EndAt = request.EndAt!.Value;
+        program.StartAt = request.StartAt;
+        program.EndAt = request.EndAt;
 
         return program;
     }

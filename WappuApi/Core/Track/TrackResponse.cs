@@ -4,15 +4,13 @@ namespace WappuApi.Core.Track;
 
 public record TrackResponse : TrackRequest
 {
-    public TrackResponse() { }
+    public int Id { get; init; }
 
-    public static Expression<Func<TrackEntity, TrackResponse>> Projection = (entity) => new TrackResponse()
+    public static readonly Expression<Func<TrackEntity, TrackResponse>> Projection = (entity) => new()
     {
         Id = entity.Id,
         Artist = entity.Artist,
         Title = entity.Title,
         PlayedAt = entity.PlayedAt,
     };
-
-    public int Id { get; init; }
 }

@@ -4,10 +4,8 @@ using WappuApi.Core.Track;
 
 namespace WappuApi.Core;
 
-public class DataContext : DbContext
+public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
 {
-    public DataContext(DbContextOptions<DataContext> options) : base(options) { }
-
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         OnBeforeSaving();
