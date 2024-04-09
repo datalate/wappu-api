@@ -78,6 +78,21 @@ public class ProgramController(
         return Ok();
     }
 
+    [HttpDelete("")]
+    public async Task<ActionResult> DeleteRange([FromQuery] DateTime from, [FromQuery] DateTime to)
+    {
+        var programs = await _context.Programs
+            .Where(program => program.StartAt >= from && program.EndAt <= to)
+            .ToListAsync();
+
+        _logger.LogInformation("Deleting {Count} programs", programs.Count);
+
+        _context.RemoveRange(programs);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
     private static ProgramEntity MapFields(ProgramEntity program, ProgramRequest request)
     {
         program.Title = request.Title;

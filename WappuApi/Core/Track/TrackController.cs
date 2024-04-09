@@ -79,6 +79,21 @@ public class TrackController(
         return Ok();
     }
 
+    [HttpDelete("")]
+    public async Task<ActionResult> DeleteRange([FromQuery] DateTime from, [FromQuery] DateTime to)
+    {
+        var tracks = await _context.Tracks
+            .Where(track => track.PlayedAt >= from && track.PlayedAt <= to)
+            .ToListAsync();
+
+        _logger.LogInformation("Deleting {Count} tracks", tracks.Count);
+
+        _context.RemoveRange(tracks);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
     private static TrackEntity MapFields(TrackEntity track, TrackRequest request)
     {
         track.Artist = request.Artist;
