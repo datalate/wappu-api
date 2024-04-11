@@ -36,8 +36,8 @@ public class ImportController(
             programs.Select(program => new ProgramEntity
             {
                 Title = program.Title,
-                StartAt = program.Start.ToUniversalTime(),
-                EndAt = program.End.ToUniversalTime(),
+                StartAt = program.Start,
+                EndAt = program.End,
             })
         );
 
