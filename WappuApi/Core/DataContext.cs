@@ -1,11 +1,22 @@
 using Microsoft.EntityFrameworkCore;
 using WappuApi.Core.Program;
 using WappuApi.Core.Track;
+using WappuApi.Util;
 
 namespace WappuApi.Core;
 
 public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
 {
+    public DbSet<ProgramEntity> Programs { get; protected set; } = null!;
+    public DbSet<TrackEntity> Tracks { get; protected set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyUtcDateTimeConversions();
+    }
+
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         OnBeforeSaving();
@@ -40,8 +51,4 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             }
         }
     }
-
-    public DbSet<ProgramEntity> Programs { get; protected set; } = null!;
-
-    public DbSet<TrackEntity> Tracks { get; protected set; } = null!;
 }
