@@ -16,7 +16,7 @@ public class ApiKeyAuthenticationHandler(
     {
         if (!Request.Headers.TryGetValue(HeaderName, out var apiKeyValues))
         {
-            return AuthenticateResult.Fail($"API key not defined in header '{HeaderName}'");
+            return AuthenticateResult.NoResult();
         }
 
         var providedApiKey = apiKeyValues.FirstOrDefault();
