@@ -10,11 +10,13 @@ public class ApiKeyAuthenticationHandler(
     ILoggerFactory logger,
     UrlEncoder encoder) : AuthenticationHandler<ApiKeyAuthenticationOptions>(options, logger, encoder)
 {
+    private const string HeaderName = "X-API-Key";
+
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        if (!Request.Headers.TryGetValue("X-Api-Key", out var apiKeyValues))
+        if (!Request.Headers.TryGetValue(HeaderName, out var apiKeyValues))
         {
-            return AuthenticateResult.Fail("Missing API key (Header: X-Api-Key)");
+            return AuthenticateResult.Fail($"API key not defined in header '{HeaderName}'");
         }
 
         var providedApiKey = apiKeyValues.FirstOrDefault();
