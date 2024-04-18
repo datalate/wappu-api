@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +39,7 @@ public class ProgramController(
     }
 
     [HttpPost("")]
+    [Authorize]
     public async Task<ActionResult<ProgramResponse>> Post([FromBody] ProgramRequest request)
     {
         var program = _context.Programs.Add(new ProgramEntity()).Entity;
@@ -49,6 +51,7 @@ public class ProgramController(
     }
 
     [HttpPut("{id}")]
+    [Authorize]
     public async Task<ActionResult<ProgramResponse>> Put([FromBody] ProgramRequest request, [FromRoute] int id)
     {
         var program = await _context.Programs
@@ -65,6 +68,7 @@ public class ProgramController(
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<ActionResult> Delete([FromRoute] int id)
     {
         var program = await _context.Programs
@@ -79,6 +83,7 @@ public class ProgramController(
     }
 
     [HttpDelete("")]
+    [Authorize]
     public async Task<ActionResult> DeleteRange([FromQuery] DateTime from, [FromQuery] DateTime to)
     {
         var programs = await _context.Programs

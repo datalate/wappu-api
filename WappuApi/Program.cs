@@ -21,8 +21,6 @@ builder.Services.AddCoreModule(builder.Configuration);
 
 builder.Services.AddApiKeyModule(builder.Configuration);
 
-builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WappuApi.Core.Program;
 
@@ -5,6 +6,7 @@ namespace WappuApi.Core.Import;
 
 [ApiController]
 [Route("import")]
+[Authorize]
 public class ImportController(
     ILogger<ImportController> logger,
     DataContext context) : ControllerBase

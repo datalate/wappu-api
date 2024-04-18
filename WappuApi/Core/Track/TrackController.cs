@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +39,7 @@ public class TrackController(
     }
 
     [HttpPost("")]
+    [Authorize]
     public async Task<ActionResult<TrackResponse>> Post([FromBody] TrackRequest request)
     {
         var track = _context.Tracks.Add(new TrackEntity()).Entity;
@@ -49,6 +51,7 @@ public class TrackController(
     }
 
     [HttpPut("{id}")]
+    [Authorize]
     public async Task<ActionResult<TrackResponse>> Put([FromBody] TrackRequest request, [FromRoute] int id)
     {
         var track = await _context.Tracks
@@ -65,6 +68,7 @@ public class TrackController(
     }
 
     [HttpDelete("{id}")]
+    [Authorize]
     public async Task<ActionResult> Delete([FromRoute] int id)
     {
         var track = await _context.Tracks
@@ -80,6 +84,7 @@ public class TrackController(
     }
 
     [HttpDelete("")]
+    [Authorize]
     public async Task<ActionResult> DeleteRange([FromQuery] DateTime from, [FromQuery] DateTime to)
     {
         var tracks = await _context.Tracks
