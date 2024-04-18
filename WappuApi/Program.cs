@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.HttpOverrides;
+using WappuApi.Authentication;
 using WappuApi.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
 builder.Services.AddCors(o =>
 {
     o.AddPolicy("AllowAll", builder =>
@@ -14,7 +16,13 @@ builder.Services.AddCors(o =>
             .AllowAnyHeader();
     });
 });
+
 builder.Services.AddCoreModule(builder.Configuration);
+
+builder.Services.AddApiKeyModule(builder.Configuration);
+
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
@@ -34,7 +42,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAll");
-app.UseAuthorization();
 
 app.MapControllers();
 
