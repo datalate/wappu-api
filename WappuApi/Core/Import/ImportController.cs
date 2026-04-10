@@ -9,32 +9,21 @@ namespace WappuApi.Core.Import;
 [Authorize]
 public class ImportController(
     ILogger<ImportController> logger,
+    IHttpClientFactory httpClientFactory,
     DataContext context) : ControllerBase
 {
-    private readonly ILogger<ImportController> _logger = logger;
-    private readonly DataContext _context = context;
-
-    private static readonly SocketsHttpHandler handler = new()
-    {
-        PooledConnectionLifetime = TimeSpan.FromMinutes(15) // Recreate every 15 minutes
-    };
-
-    private static readonly HttpClient httpClient = new(handler)
-    {
-        BaseAddress = new Uri("https://wappuradio.fi"),
-    };
-
     [HttpPost("")]
     public async Task<ActionResult> Import()
     {
-        using var response = await httpClient.GetAsync("/api/programs");
+        var client = httpClientFactory.CreateClient("Import");
+        using var response = await client.GetAsync("/api/programs");
         response.EnsureSuccessStatusCode();
 
         var programs = (await response.Content.ReadFromJsonAsync<IEnumerable<ImportedProgramDto>>() ?? []).ToList();
 
-        _logger.LogInformation("Importing {Count} programs", programs.Count);
+        logger.LogInformation("Importing {Count} programs", programs.Count);
 
-        _context.Programs.AddRange(
+        context.Programs.AddRange(
             programs.Select(program => new ProgramEntity
             {
                 Title = program.Title,
@@ -43,7 +32,7 @@ public class ImportController(
             })
         );
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return Ok();
     }

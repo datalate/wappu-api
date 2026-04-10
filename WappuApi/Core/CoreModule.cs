@@ -22,6 +22,12 @@ public static class CoreModule
                 opt.UseSqlite(configuration.GetConnectionString("Default"));
             });
         }
+
+        services.AddHttpClient("Import", (_, client) =>
+        {
+            var baseUrl = configuration.GetSection("Import:BaseUrl").Value ?? "https://wappuradio.fi";
+            client.BaseAddress = new Uri(baseUrl);
+        });
         
         return services;
     }
