@@ -15,6 +15,13 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyUtcDateTimeConversions();
+
+        modelBuilder.Entity<ProgramEntity>()
+            .HasIndex(p => p.StartAt);
+        modelBuilder.Entity<ProgramEntity>()
+            .HasIndex(p => p.EndAt);
+        modelBuilder.Entity<TrackEntity>()
+            .HasIndex(t => t.PlayedAt);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -36,7 +43,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
         {
             if (entry.Entity is not EntityBase)
             {
-                return;
+                continue;
             }
 
             switch (entry.State)
