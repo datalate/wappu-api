@@ -19,7 +19,7 @@ public class TrackController(
             .Where(track => !endDate.HasValue || (track.PlayedAt < endDate))
             .ToListAsync();
 
-        return Ok(tracks.Select(TrackResponse.Projection.Compile()));
+        return Ok(tracks.Select(TrackResponse.Map));
     }
 
     [HttpGet("{id}")]
@@ -32,7 +32,7 @@ public class TrackController(
         if (track == default)
             return NotFound();
 
-        return Ok(TrackResponse.Projection.Compile().Invoke(track));
+        return Ok(TrackResponse.Map(track));
     }
 
     [HttpPost("")] 
@@ -44,7 +44,7 @@ public class TrackController(
 
         await context.SaveChangesAsync();
 
-        return Ok(TrackResponse.Projection.Compile().Invoke(track));
+        return Ok(TrackResponse.Map(track));
     }
 
     [HttpPut("{id}")]
@@ -61,7 +61,7 @@ public class TrackController(
 
         await context.SaveChangesAsync();
 
-        return Ok(TrackResponse.Projection.Compile().Invoke(track));
+        return Ok(TrackResponse.Map(track));
     }
 
     [HttpDelete("{id}")]

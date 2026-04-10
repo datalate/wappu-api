@@ -19,7 +19,7 @@ public class ProgramController(
             .Where(program => !endDate.HasValue || (program.EndAt < endDate))
             .ToListAsync();
 
-        return Ok(programs.Select(ProgramResponse.Projection.Compile()));
+        return Ok(programs.Select(ProgramResponse.Map));
     }
 
     [HttpGet("{id}")]
@@ -32,7 +32,7 @@ public class ProgramController(
         if (program == default)
             return NotFound();
 
-        return Ok(ProgramResponse.Projection.Compile().Invoke(program));
+        return Ok(ProgramResponse.Map(program));
     }
 
     [HttpPost("")]
@@ -44,7 +44,7 @@ public class ProgramController(
 
         await context.SaveChangesAsync();
 
-        return Ok(ProgramResponse.Projection.Compile().Invoke(program));
+        return Ok(ProgramResponse.Map(program));
     }
 
     [HttpPut("{id}")]
@@ -61,7 +61,7 @@ public class ProgramController(
 
         await context.SaveChangesAsync();
 
-        return Ok(ProgramResponse.Projection.Compile().Invoke(program));
+        return Ok(ProgramResponse.Map(program));
     }
 
     [HttpDelete("{id}")]
