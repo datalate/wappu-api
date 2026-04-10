@@ -11,9 +11,6 @@ public class ImportController(
     ILogger<ImportController> logger,
     DataContext context) : ControllerBase
 {
-    private readonly ILogger<ImportController> _logger = logger;
-    private readonly DataContext _context = context;
-
     private static readonly SocketsHttpHandler handler = new()
     {
         PooledConnectionLifetime = TimeSpan.FromMinutes(15) // Recreate every 15 minutes
@@ -32,9 +29,9 @@ public class ImportController(
 
         var programs = (await response.Content.ReadFromJsonAsync<IEnumerable<ImportedProgramDto>>() ?? []).ToList();
 
-        _logger.LogInformation("Importing {Count} programs", programs.Count);
+        logger.LogInformation("Importing {Count} programs", programs.Count);
 
-        _context.Programs.AddRange(
+        context.Programs.AddRange(
             programs.Select(program => new ProgramEntity
             {
                 Title = program.Title,
@@ -43,7 +40,7 @@ public class ImportController(
             })
         );
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return Ok();
     }

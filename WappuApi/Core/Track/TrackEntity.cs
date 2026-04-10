@@ -5,6 +5,8 @@ public class TrackEntity : EntityBase
     public TrackEntity() { }
 
     public string? Artist { get; set; }
-    public string Title { get; set; } = null!;
+
+    public string Title { get; set; } = "";
+
     public DateTime PlayedAt { get; set; }
 }

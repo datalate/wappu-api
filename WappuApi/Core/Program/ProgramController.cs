@@ -10,13 +10,10 @@ public class ProgramController(
     ILogger<ProgramController> logger,
     DataContext context) : ControllerBase
 {
-    private readonly ILogger<ProgramController> _logger = logger;
-    private readonly DataContext _context = context;
-
     [HttpGet("")]
     public async Task<ActionResult<IEnumerable<ProgramResponse>>> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate)
     {
-        var programs = await _context.Programs
+        var programs = await context.Programs
             .AsNoTracking()
             .Where(program => !startDate.HasValue || (program.StartAt > startDate))
             .Where(program => !endDate.HasValue || (program.EndAt < endDate))
@@ -28,7 +25,7 @@ public class ProgramController(
     [HttpGet("{id}")]
     public async Task<ActionResult<ProgramResponse>> Get([FromRoute] int id)
     {
-        var program = await _context.Programs
+        var program = await context.Programs
             .AsNoTracking()
             .SingleOrDefaultAsync(program => program.Id == id);
 
@@ -42,10 +39,10 @@ public class ProgramController(
     [Authorize]
     public async Task<ActionResult<ProgramResponse>> Post([FromBody] ProgramRequest request)
     {
-        var program = _context.Programs.Add(new ProgramEntity()).Entity;
+        var program = context.Programs.Add(new ProgramEntity()).Entity;
         program = MapFields(program, request);
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return Ok(ProgramResponse.Projection.Compile().Invoke(program));
     }
@@ -54,7 +51,7 @@ public class ProgramController(
     [Authorize]
     public async Task<ActionResult<ProgramResponse>> Put([FromBody] ProgramRequest request, [FromRoute] int id)
     {
-        var program = await _context.Programs
+        var program = await context.Programs
             .SingleOrDefaultAsync(program => program.Id == id);
 
         if (program == default)
@@ -62,7 +59,7 @@ public class ProgramController(
 
         program = MapFields(program, request);
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return Ok(ProgramResponse.Projection.Compile().Invoke(program));
     }
@@ -71,12 +68,12 @@ public class ProgramController(
     [Authorize]
     public async Task<ActionResult> Delete([FromRoute] int id)
     {
-        var program = await _context.Programs
+        var program = await context.Programs
             .SingleOrDefaultAsync(program => program.Id == id);
 
         if (program != default) {
-            _context.Remove(program);
-            await _context.SaveChangesAsync();
+            context.Remove(program);
+            await context.SaveChangesAsync();
         }
 
         return Ok();
@@ -86,14 +83,14 @@ public class ProgramController(
     [Authorize]
     public async Task<ActionResult> DeleteRange([FromQuery] DateTime from, [FromQuery] DateTime to)
     {
-        var programs = await _context.Programs
+        var programs = await context.Programs
             .Where(program => program.StartAt >= from && program.EndAt <= to)
             .ToListAsync();
 
-        _logger.LogInformation("Deleting {Count} programs", programs.Count);
+        logger.LogInformation("Deleting {Count} programs", programs.Count);
 
-        _context.RemoveRange(programs);
-        await _context.SaveChangesAsync();
+        context.RemoveRange(programs);
+        await context.SaveChangesAsync();
 
         return Ok();
     }
