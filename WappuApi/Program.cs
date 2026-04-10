@@ -49,7 +49,7 @@ app.UseForwardedHeaders();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
+    app.UseSwagger(c => c.OpenApiVersion = OpenApiSpecVersion.OpenApi3_1);
     app.UseSwaggerUI();
 }
 
