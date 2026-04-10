@@ -4,7 +4,7 @@ public class ProgramEntity : EntityBase
 {
     public ProgramEntity() { }
 
-    public string Title { get; set; } = null!;
+    public string Title { get; set; } = "";
 
     public DateTime StartAt { get; set; }
 

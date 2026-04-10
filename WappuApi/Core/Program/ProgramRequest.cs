@@ -4,14 +4,11 @@ namespace WappuApi.Core.Program;
 
 public record ProgramRequest : IValidatableObject
 {
-    [Required]
-    public string Title { get; init; } = "";
+    public required string Title { get; init; }
 
-    [Required]
-    public DateTime StartAt { get; init; }
+    public required DateTime StartAt { get; init; }
 
-    [Required]
-    public DateTime EndAt { get; init; }
+    public required DateTime EndAt { get; init; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {

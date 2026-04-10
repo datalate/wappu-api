@@ -35,7 +35,7 @@ public class TrackController(
         return Ok(TrackResponse.Map(track));
     }
 
-    [HttpPost("")] 
+    [HttpPost("")]
     [Authorize]
     public async Task<ActionResult<TrackResponse>> Post([FromBody] TrackRequest request)
     {
