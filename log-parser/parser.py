@@ -14,8 +14,8 @@ import json
 import sqlite3
 
 use_notice_format = True
-nyt_soi_notice_format = r'^-{bot_name}:{channel}- [n|N]yt soi: (.+?)(?: - (.+?))?[\s]*$'
-nyt_soi_privmsg_format = r'^<.{bot_name}> [n|N]yt soi: (.+?)(?: - (.+?))?[\s]*$'
+nyt_soi_notice_format = r'^-{bot_name}:{channel}- [n|N]yt soi: (.+?)(?: [-|–] (.+?))?[\s]*$'
+nyt_soi_privmsg_format = r'^<.{bot_name}> [n|N]yt soi: (.+?)(?: [-|–] (.+?))?[\s]*$'
 nyt_esiintyy_format = r'^-{bot_name}:{channel}- [n|N]yt esiintyy: (.+?)[\s]*$' # not in use
 tz = datetime.timezone.utc
 
